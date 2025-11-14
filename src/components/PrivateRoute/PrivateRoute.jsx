@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 
 function PrivateRoute({ children }) {
-  const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -14,14 +13,11 @@ function PrivateRoute({ children }) {
       .then((res) => {
         if (res.data.status) setIsAuthenticated(res.data.status);
       })
-      .catch(() => setIsAuthenticated(false))
-      .finally(() => setLoading(false));
+      .catch(() => setIsAuthenticated(false));
   };
 
   useEffect(() => autheticateUser, []);
   console.log("isAuthenticated", isAuthenticated);
-
-  if (loading) return <div>Loading...</div>;
 
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
